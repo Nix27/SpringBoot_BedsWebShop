@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add new Category</title>
+</head>
+<body>
+  <h1>New Category</h1>
+  <form action="#" th:action="@{/bedswebshop/addNewCategory}" th:object="${newCategory}" method="post">
+    <p>Name: <input type="text" th:field="*{name}" /></p>
+    <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+  </form>
+</body>
+</html>
