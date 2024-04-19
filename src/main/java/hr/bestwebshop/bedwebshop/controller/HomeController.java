@@ -5,6 +5,12 @@ import hr.bestwebshop.bedwebshop.model.ProductSearch;
 import hr.bestwebshop.bedwebshop.service.abstraction.CategoryService;
 import hr.bestwebshop.bedwebshop.service.abstraction.ProductService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +41,9 @@ public class HomeController {
             model.addAttribute("categories", categoryService.getAllCategories());
         }
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("username", authentication.getName());
+
         return "home";
     }
 
@@ -51,6 +60,15 @@ public class HomeController {
         if(product.isEmpty()) return "redirect:showHomePage";
         model.addAttribute("product", product.get());
         return "product_details";
+    }
+
+    @GetMapping("/image/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
+        byte[] image = productService.getProduct(id).get().getImageBytes();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+        return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
 
 }

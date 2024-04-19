@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute RegistrationRequest registrationRequest, Model model) {
+    public String register(@ModelAttribute RegistrationRequest registrationRequest) {
         try {
             userService.register(registrationRequest);
             return "/login";

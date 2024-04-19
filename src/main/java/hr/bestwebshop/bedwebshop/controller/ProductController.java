@@ -89,13 +89,4 @@ public class ProductController {
         return "redirect:getAllProducts";
     }
 
-    @GetMapping("/image/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
-        byte[] image = productService.getProduct(id).get().getImageBytes();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-
-        return new ResponseEntity<>(image, headers, HttpStatus.OK);
-    }
-
 }

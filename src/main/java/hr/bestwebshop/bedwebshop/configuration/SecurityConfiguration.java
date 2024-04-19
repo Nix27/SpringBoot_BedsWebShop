@@ -1,5 +1,6 @@
 package hr.bestwebshop.bedwebshop.configuration;
 
+import hr.bestwebshop.bedwebshop.enums.UserRole;
 import hr.bestwebshop.bedwebshop.repository.RoleRepository;
 import hr.bestwebshop.bedwebshop.repository.UserRepository;
 import hr.bestwebshop.bedwebshop.service.implementation.UserServiceImpl;
@@ -29,19 +30,19 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
                                 "/login",
-                                "/bedswebshop/user/register"
-                                ).anonymous()
-                        .requestMatchers(
+                                "/bedswebshop/user/register",
                                 "/bedswebshop/home",
                                 "/bedswebshop/filterProducts",
-                                "/bedswebshop/productDetails/**"
-                        ).hasAnyRole("USER", "ADMIN")
+                                "/bedswebshop/productDetails/**",
+                                "/bedswebshop/image/**"
+                                ).permitAll()
                         .requestMatchers(
                                 "/bedswebshop/categories/**",
-                                "/bedswebshop/products/**").hasRole("ADMIN")
+                                "/bedswebshop/products/**").hasRole(UserRole.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.defaultSuccessUrl("/bedswebshop/home"))
+                .logout((logout) -> logout.logoutSuccessUrl("/bedswebshop/home"))
                 .logout(LogoutConfigurer::permitAll);
 
         return httpSecurity.build();
@@ -59,10 +60,5 @@ public class SecurityConfiguration {
         daoAuthenticationProvider.setUserDetailsService(userDetailsService);
         return new ProviderManager(daoAuthenticationProvider);
     }
-
-    /*@Bean
-    public UserDetailsService userDetailsService() {
-        return new UserServiceImpl(userRepository, roleRepository, passwordEncoder);
-    }*/
 
 }

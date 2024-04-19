@@ -1,12 +1,12 @@
 package hr.bestwebshop.bedwebshop.service.implementation;
 
+import hr.bestwebshop.bedwebshop.enums.UserRole;
 import hr.bestwebshop.bedwebshop.model.RegistrationRequest;
 import hr.bestwebshop.bedwebshop.model.Role;
 import hr.bestwebshop.bedwebshop.model.User;
 import hr.bestwebshop.bedwebshop.repository.RoleRepository;
 import hr.bestwebshop.bedwebshop.repository.UserRepository;
 import hr.bestwebshop.bedwebshop.service.abstraction.UserService;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         if(user.isPresent()) throw new Exception("User already exists with same username or email");
 
         String encodedPassword = passwordEncoder.encode(registrationRequest.getPassword());
-        Role userRole = roleRepository.findByName("USER").get();
+        Role userRole = roleRepository.findByName(UserRole.USER.name()).get();
 
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(userRole);
