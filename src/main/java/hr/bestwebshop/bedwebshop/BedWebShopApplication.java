@@ -1,6 +1,5 @@
 package hr.bestwebshop.bedwebshop;
 
-import hr.bestwebshop.bedwebshop.enums.UserRole;
 import hr.bestwebshop.bedwebshop.model.Role;
 import hr.bestwebshop.bedwebshop.model.User;
 import hr.bestwebshop.bedwebshop.repository.RoleRepository;
@@ -24,10 +23,10 @@ public class BedWebShopApplication {
     @Bean
     CommandLineRunner run(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            if(roleRepository.findByName(UserRole.ADMIN.name()).isPresent()) return;
+            if(roleRepository.findByName("ROLE_ADMIN").isPresent()) return;
 
-            Role adminRole = roleRepository.save(new Role(UserRole.ADMIN.name()));
-            roleRepository.save(new Role(UserRole.USER.name()));
+            Role adminRole = roleRepository.save(new Role("ROLE_ADMIN"));
+            roleRepository.save(new Role("ROLE_USER"));
 
             Set<Role> roles = new HashSet<>();
             roles.add(adminRole);

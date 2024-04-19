@@ -1,6 +1,5 @@
 package hr.bestwebshop.bedwebshop.service.implementation;
 
-import hr.bestwebshop.bedwebshop.enums.UserRole;
 import hr.bestwebshop.bedwebshop.model.RegistrationRequest;
 import hr.bestwebshop.bedwebshop.model.Role;
 import hr.bestwebshop.bedwebshop.model.User;
@@ -41,7 +40,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         if(user.isPresent()) throw new Exception("User already exists with same username or email");
 
         String encodedPassword = passwordEncoder.encode(registrationRequest.getPassword());
-        Role userRole = roleRepository.findByName(UserRole.USER.name()).get();
+        Role userRole = roleRepository.findByName("ROLE_USER").get();
 
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(userRole);

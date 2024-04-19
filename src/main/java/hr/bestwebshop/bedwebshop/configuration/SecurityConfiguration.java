@@ -1,9 +1,5 @@
 package hr.bestwebshop.bedwebshop.configuration;
 
-import hr.bestwebshop.bedwebshop.enums.UserRole;
-import hr.bestwebshop.bedwebshop.repository.RoleRepository;
-import hr.bestwebshop.bedwebshop.repository.UserRepository;
-import hr.bestwebshop.bedwebshop.service.implementation.UserServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -38,7 +33,7 @@ public class SecurityConfiguration {
                                 ).permitAll()
                         .requestMatchers(
                                 "/bedswebshop/categories/**",
-                                "/bedswebshop/products/**").hasRole(UserRole.ADMIN.name())
+                                "/bedswebshop/products/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.defaultSuccessUrl("/bedswebshop/home"))

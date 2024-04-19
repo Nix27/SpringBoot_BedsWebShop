@@ -28,7 +28,7 @@
                     <td th:text="${product.description}"></td>
                     <td th:text="${product.price}"></td>
                     <td th:text="${product.category.name}"></td>
-                    <td><img th:src="@{/bedswebshop/products/image/{productId}(productId=${product.id})}" alt="product image" width="50" height="50" /></td>
+                    <td><img th:src="@{/bedswebshop/image/{productId}(productId=${product.id})}" alt="product image" width="50" height="50" /></td>
                     <td><a th:href="@{/bedswebshop/products/updateProduct/{productId}(productId=${product.id})}" class="btn btn-secondary">Edit</a></td>
                     <td><a th:href="@{/bedswebshop/products/deleteProduct/{productId}(productId=${product.id})}" class="btn btn-danger">Delete</a></td>
                 </tr>
