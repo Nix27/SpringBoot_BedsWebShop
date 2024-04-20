@@ -17,9 +17,13 @@
           <h4 th:text="${product.name}"></h4>
           <h5 th:text="${product.category.name}"></h5>
           <p th:text="'€' + ${product.price}"></p>
-          <label for="quantity">Quantity:</label>
-          <input type="number" id="quantity" class="form-control rounded-2 my-2" />
-          <a class="btn btn-primary mb-3" href="#">Add To Cart</a>
+          <form class="flex-column" action="#" th:action="@{/bedswebshop/shoppingcart/addToShoppingCart}" th:object="${shoppingCartItem}" method="post">
+            <input type="hidden" th:value="${product.id}" th:attr="name='productId'" />
+            <input type="hidden" th:value="${user.id}" th:attr="name='userId'" />
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" th:field="*{quantity}" class="form-control rounded-2 my-2" required />
+            <input class="btn btn-primary mb-3" type="submit" value="Add To Cart" />
+          </form>
         </div>
         <hr />
       </div>

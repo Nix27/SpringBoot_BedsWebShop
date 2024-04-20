@@ -1,7 +1,9 @@
 package hr.bestwebshop.bedwebshop.controller;
 
 import hr.bestwebshop.bedwebshop.dto.ProductDTO;
+import hr.bestwebshop.bedwebshop.dto.ShoppingCartItemDTO;
 import hr.bestwebshop.bedwebshop.model.ProductSearch;
+import hr.bestwebshop.bedwebshop.model.User;
 import hr.bestwebshop.bedwebshop.service.abstraction.CategoryService;
 import hr.bestwebshop.bedwebshop.service.abstraction.ProductService;
 import lombok.AllArgsConstructor;
@@ -59,6 +61,9 @@ public class HomeController {
         Optional<ProductDTO> product = productService.getProduct(id);
         if(product.isEmpty()) return "redirect:showHomePage";
         model.addAttribute("product", product.get());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user", user);
+        model.addAttribute("shoppingCartItem", new ShoppingCartItemDTO());
         return "product_details";
     }
 

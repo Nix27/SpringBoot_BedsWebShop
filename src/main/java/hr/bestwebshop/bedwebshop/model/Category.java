@@ -16,9 +16,6 @@ public class Category {
     private Integer id;
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Product> products;
-
     public Category(Integer id, String name) {
         this.id = id;
         this.name = name;
