@@ -33,6 +33,9 @@ public class SecurityConfiguration {
                                 "/bedswebshop/shoppingcart/**"
                                 ).permitAll()
                         .requestMatchers(
+                                "/bedswebshop/order/**"
+                        ).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(
                                 "/bedswebshop/categories/**",
                                 "/bedswebshop/products/**").hasRole("ADMIN")
                         .anyRequest().authenticated()

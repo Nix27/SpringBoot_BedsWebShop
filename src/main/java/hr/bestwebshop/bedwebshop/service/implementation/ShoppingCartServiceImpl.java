@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -22,7 +23,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public List<ShoppingCartItemDTO> getAllShoppingCartItemsForUser(User user) {
-        return shoppingCartItemRepository.findShoppingCartItemsByUser(user)
+
+        if(user != null) {
+            return shoppingCartItemRepository.findShoppingCartItemsByUser(user)
+                    .stream()
+                    .map(this::convertShoppingCartItemToShoppingCartItemDto)
+                    .toList();
+        }
+
+        return shoppingCartItemRepository.findShoppingCartItemsByUserNull()
                 .stream()
                 .map(this::convertShoppingCartItemToShoppingCartItemDto)
                 .toList();
@@ -30,7 +39,26 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartItemDTO addShoppingCartItem(ShoppingCartItemDTO shoppingCartItemDTO) {
-        return convertShoppingCartItemToShoppingCartItemDto(shoppingCartItemRepository.save(convertShoppingCartItemDtoToShoppingCartItem(shoppingCartItemDTO)));
+        ShoppingCartItem shoppingCartItemFromDto = convertShoppingCartItemDtoToShoppingCartItem(shoppingCartItemDTO);
+        Optional<ShoppingCartItem> shoppingCartItemOptional = shoppingCartItemRepository.findShoppingCartItemByProductAndUser(shoppingCartItemFromDto.getProduct(), shoppingCartItemFromDto.getUser());
+        if(shoppingCartItemOptional.isEmpty()) {
+            return convertShoppingCartItemToShoppingCartItemDto(shoppingCartItemRepository.save(shoppingCartItemFromDto));
+        }
+
+        ShoppingCartItem shoppingCartItem = shoppingCartItemOptional.get();
+        shoppingCartItem.setQuantity(shoppingCartItem.getQuantity() + shoppingCartItemDTO.getQuantity());
+        return convertShoppingCartItemToShoppingCartItemDto(shoppingCartItemRepository.save(shoppingCartItem));
+    }
+
+    @Override
+    public Double getTotalPrice(List<ShoppingCartItemDTO> shoppingCartItems) {
+        Double totalPrice = 0.0;
+
+        for (ShoppingCartItemDTO item : shoppingCartItems) {
+            totalPrice += item.getPrice();
+        }
+
+        return totalPrice;
     }
 
     @Override

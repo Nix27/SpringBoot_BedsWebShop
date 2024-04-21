@@ -20,7 +20,6 @@
             <input type="file" id="image" name="productImage" class="form-control rounded-2 mb-3" />
             <label for="category" class="my-2">Category:</label>
             <select th:field="*{categoryId}" id="category">
-                <option value="0" disabled selected>Select category option</option>
                 <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
             </select>
             <input type="submit" value="Add" class="btn btn-primary" />

@@ -55,7 +55,7 @@
                     <a class="btn btn-primary" th:href="@{/bedswebshop/home}">Continue Shopping</a>
                 </div>
             </div>
-            <div class="row gap-1 gap-md-2 px-2 px-md-5 mb-5">
+            <div th:if="${shoppingCartItems.size() > 0}" class="row gap-1 gap-md-2 px-2 px-md-5 mb-5">
                 <div th:each="item : ${shoppingCartItems}" class="row align-items-center item-border-right gap-1 gap-md-0 shopping-cart-item">
                     <div class="col-2 col-md-3">
                         <img th:src="@{/bedswebshop/image/{productId}(productId=${item.productId})}" alt="product image" width="50" height="50" />
@@ -79,12 +79,15 @@
                     </div>
                 </div>
                 <div class="d-flex flex-column align-items-center">
-                    <div id="total-price" class="d-flex justify-content-between mb-4">
+                    <div id="total-price" class="d-flex justify-content-between gap-3 mb-4">
                         <span>Total(EUR)</span>
                         <span th:text="'€' + ${totalprice}"></span>
                     </div>
-                    <a href="#" class="btn btn-primary px-5 py-1">Summary</a>
+                    <a th:href="@{/bedswebshop/order/orderSummary}" class="btn btn-primary px-5 py-1">Summary</a>
                 </div>
+            </div>
+            <div th:if="${shoppingCartItems.size() < 1}">
+                <h4>You have no items in you shopping cart</h4>
             </div>
         </div>
     </div>

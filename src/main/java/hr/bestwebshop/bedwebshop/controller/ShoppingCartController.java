@@ -26,16 +26,16 @@ public class ShoppingCartController {
 
     @GetMapping("/getAllShoppingCartItems")
     public String getAllShoppingCartItems(Model model) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<ShoppingCartItemDTO> shoppingCartItems = shoppingCartService.getAllShoppingCartItemsForUser(user);
-        model.addAttribute("shoppingCartItems", shoppingCartItems);
-        Double totalPrice = 0.0;
-
-        for (ShoppingCartItemDTO item : shoppingCartItems) {
-            totalPrice += item.getPrice();
+        List<ShoppingCartItemDTO> shoppingCartItems;
+        if(!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            shoppingCartItems = shoppingCartService.getAllShoppingCartItemsForUser(user);
+        } else {
+            shoppingCartItems = shoppingCartService.getAllShoppingCartItemsForUser(null);
         }
 
-        model.addAttribute("totalprice", totalPrice);
+        model.addAttribute("shoppingCartItems", shoppingCartItems);
+        model.addAttribute("totalprice", shoppingCartService.getTotalPrice(shoppingCartItems));
 
         return "shoppingcart";
     }

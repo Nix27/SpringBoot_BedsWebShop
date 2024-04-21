@@ -10,6 +10,7 @@ public interface ShoppingCartService {
 
     List<ShoppingCartItemDTO> getAllShoppingCartItemsForUser(User user);
     ShoppingCartItemDTO addShoppingCartItem(ShoppingCartItemDTO shoppingCartItemDTO);
+    Double getTotalPrice(List<ShoppingCartItemDTO> shoppingCartItems);
     void deleteShoppingCartItem(Integer id);
     void deleteShoppingCartItemsForUser(User user);
     void incrementQuantityOfShoppingCartItem(Integer shoppingCartItemId);
