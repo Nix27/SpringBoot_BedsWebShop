@@ -34,12 +34,12 @@
                 </li>
             </ul>
             <div class="flex-row justify-content-between">
-                <div th:if="${!username.equals('anonymousUser')}">
+                <div th:if="${!#authentication.getName().equals('anonymousUser')}">
                     <a class="btn" th:href="@{/bedswebshop/shoppingcart/getAllShoppingCartItems}"><i class="bi bi-cart-fill text-light"></i></a>
-                    <span th:text="${username}" class="text-light"></span>
+                    <span th:text="${#authentication.getName()}" class="text-light"></span>
                     <a th:href="@{/logout}" class="btn btn-secondary ms-3">Logout</a>
                 </div>
-                <div th:if="${username.equals('anonymousUser')}">
+                <div th:if="${#authentication.getName().equals('anonymousUser')}">
                     <a class="btn" th:href="@{/bedswebshop/shoppingcart/getAllShoppingCartItems}"><i class="bi bi-cart-fill text-light"></i></a>
                     <a th:href="@{/login}" class="btn btn-light">Login</a>
                     <a th:href="@{/bedswebshop/user/register}" class="btn btn-secondary">Register</a>

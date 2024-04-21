@@ -54,6 +54,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void decrementQuantityOfShoppingCartItem(Integer shoppingCartItemId) {
         ShoppingCartItem shoppingCartItem = shoppingCartItemRepository.findById(shoppingCartItemId).get();
+        if(shoppingCartItem.getQuantity() == 1) {
+            shoppingCartItemRepository.delete(shoppingCartItem);
+            return;
+        }
+
         shoppingCartItem.setQuantity(shoppingCartItem.getQuantity() - 1);
         shoppingCartItemRepository.save(shoppingCartItem);
     }
@@ -62,7 +67,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return new ShoppingCartItem(
                 shoppingCartItemDTO.getId(),
                 productRepository.findById(shoppingCartItemDTO.getProductId()).get(),
-                userRepository.findById(shoppingCartItemDTO.getUserId()).get(),
+                (shoppingCartItemDTO.getUserId() != null ? userRepository.findById(shoppingCartItemDTO.getUserId()).get() : null),
                 shoppingCartItemDTO.getQuantity()
         );
     }
@@ -72,7 +77,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 shoppingCartItem.getId(),
                 shoppingCartItem.getProduct().getId(),
                 shoppingCartItem.getProduct(),
-                shoppingCartItem.getUser().getId(),
+                (shoppingCartItem.getUser() != null ? shoppingCartItem.getUser().getId() : null),
                 shoppingCartItem.getUser(),
                 shoppingCartItem.getQuantity(),
                 shoppingCartItem.getProduct().getPrice() * shoppingCartItem.getQuantity()

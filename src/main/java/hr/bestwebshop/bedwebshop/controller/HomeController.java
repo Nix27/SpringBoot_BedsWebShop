@@ -43,17 +43,14 @@ public class HomeController {
             model.addAttribute("categories", categoryService.getAllCategories());
         }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        model.addAttribute("username", authentication.getName());
-
         return "home";
     }
 
     @PostMapping("/filterProducts")
-    public String filterProducts(ProductSearch productSearch, Model model) {
+    public String filterProducts(@ModelAttribute ProductSearch productSearch, Model model) {
         List<ProductDTO> products = productService.filterProducts(productSearch);
         model.addAttribute("products", products);
-        return "home";
+        return "redirect:home";
     }
 
     @GetMapping("/productDetails/{id}")
@@ -61,8 +58,6 @@ public class HomeController {
         Optional<ProductDTO> product = productService.getProduct(id);
         if(product.isEmpty()) return "redirect:showHomePage";
         model.addAttribute("product", product.get());
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("user", user);
         model.addAttribute("shoppingCartItem", new ShoppingCartItemDTO());
         return "product_details";
     }

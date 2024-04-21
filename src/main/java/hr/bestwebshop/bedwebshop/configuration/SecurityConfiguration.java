@@ -29,11 +29,9 @@ public class SecurityConfiguration {
                                 "/bedswebshop/home",
                                 "/bedswebshop/filterProducts",
                                 "/bedswebshop/productDetails/**",
-                                "/bedswebshop/image/**"
-                                ).permitAll()
-                        .requestMatchers(
+                                "/bedswebshop/image/**",
                                 "/bedswebshop/shoppingcart/**"
-                        ).hasAnyRole("USER", "ADMIN")
+                                ).permitAll()
                         .requestMatchers(
                                 "/bedswebshop/categories/**",
                                 "/bedswebshop/products/**").hasRole("ADMIN")

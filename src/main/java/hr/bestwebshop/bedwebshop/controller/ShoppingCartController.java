@@ -43,19 +43,19 @@ public class ShoppingCartController {
     @GetMapping("/incrementQuantityOfItem/{id}")
     public String incrementQuantityOfShoppingCartItem(@PathVariable Integer id) {
         shoppingCartService.incrementQuantityOfShoppingCartItem(id);
-        return "redirect:getAllShoppingCartItems";
+        return "redirect:/bedswebshop/shoppingcart/getAllShoppingCartItems";
     }
 
     @GetMapping("/decrementQuantityOfItem/{id}")
     public String decrementQuantityOfShoppingCartItem(@PathVariable Integer id) {
         shoppingCartService.decrementQuantityOfShoppingCartItem(id);
-        return "redirect:getAllShoppingCartItems";
+        return "redirect:/bedswebshop/shoppingcart/getAllShoppingCartItems";
     }
 
     @GetMapping("/deleteShoppingCartItem/{id}")
     public String deleteShoppingCartItem(@PathVariable Integer id){
         shoppingCartService.deleteShoppingCartItem(id);
-        return "redirect:getAllShoppingCartItems";
+        return "redirect:/bedswebshop/shoppingcart/getAllShoppingCartItems";
     }
 
 }
