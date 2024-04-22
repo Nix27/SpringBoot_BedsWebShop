@@ -91,7 +91,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCartItemRepository.save(shoppingCartItem);
     }
 
-    private ShoppingCartItem convertShoppingCartItemDtoToShoppingCartItem(ShoppingCartItemDTO shoppingCartItemDTO) {
+    public ShoppingCartItem convertShoppingCartItemDtoToShoppingCartItem(ShoppingCartItemDTO shoppingCartItemDTO) {
         return new ShoppingCartItem(
                 shoppingCartItemDTO.getId(),
                 productRepository.findById(shoppingCartItemDTO.getProductId()).get(),
@@ -100,7 +100,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         );
     }
 
-    private ShoppingCartItemDTO convertShoppingCartItemToShoppingCartItemDto(ShoppingCartItem shoppingCartItem) {
+    public ShoppingCartItemDTO convertShoppingCartItemToShoppingCartItemDto(ShoppingCartItem shoppingCartItem) {
         return new ShoppingCartItemDTO(
                 shoppingCartItem.getId(),
                 shoppingCartItem.getProduct().getId(),

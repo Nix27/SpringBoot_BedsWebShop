@@ -1,5 +1,6 @@
 package hr.bestwebshop.bedwebshop;
 
+import hr.bestwebshop.bedwebshop.enums.PaymentTypeEnum;
 import hr.bestwebshop.bedwebshop.model.PaymentType;
 import hr.bestwebshop.bedwebshop.model.Role;
 import hr.bestwebshop.bedwebshop.model.User;
@@ -37,8 +38,8 @@ public class BedWebShopApplication {
             }
 
             if(paymentTypeRepository.findAll().isEmpty()) {
-                paymentTypeRepository.save(new PaymentType(0, "Cash On Delivery"));
-                paymentTypeRepository.save(new PaymentType(0, "PayPal"));
+                paymentTypeRepository.save(new PaymentType(0, PaymentTypeEnum.CashOnDelivery.getName()));
+                paymentTypeRepository.save(new PaymentType(0, PaymentTypeEnum.PayPal.getName()));
             }
         };
     }

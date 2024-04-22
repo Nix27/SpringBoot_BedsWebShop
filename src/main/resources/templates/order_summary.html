@@ -50,6 +50,7 @@
     <div class="mx-5 mt-4">
         <form action="#" th:action="@{/bedswebshop/order/createOrder}" th:object="${order}" method="post">
             <input type="hidden" th:value="${totalPrice}" th:attr="name='totalPrice'" />
+            <input type="hidden" th:value="${#authentication.getPrincipal().getId()}" th:attr="name='userId'" />
             <div class="container">
                 <div class="row mb-5">
                     <div class="col-6">

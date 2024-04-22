@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface PaymentTypeService {
     List<PaymentType> getAllPaymentTypes();
+    PaymentType getPaymentTypeById(Integer id);
 }

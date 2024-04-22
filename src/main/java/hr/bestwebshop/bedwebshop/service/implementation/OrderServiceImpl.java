@@ -1,13 +1,17 @@
 package hr.bestwebshop.bedwebshop.service.implementation;
 
 import hr.bestwebshop.bedwebshop.dto.OrderDTO;
+import hr.bestwebshop.bedwebshop.dto.ShoppingCartItemDTO;
 import hr.bestwebshop.bedwebshop.model.Order;
+import hr.bestwebshop.bedwebshop.model.OrderItem;
+import hr.bestwebshop.bedwebshop.model.ShoppingCartItem;
 import hr.bestwebshop.bedwebshop.model.User;
-import hr.bestwebshop.bedwebshop.repository.OrderRepository;
+import hr.bestwebshop.bedwebshop.repository.*;
 import hr.bestwebshop.bedwebshop.service.abstraction.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -15,6 +19,11 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private OrderRepository orderRepository;
+    private OrderItemRepository orderItemRepository;
+    private ShoppingCartItemRepository shoppingCartItemRepository;
+    private ProductRepository productRepository;
+    private UserRepository userRepository;
+    private PaymentTypeRepository paymentTypeRepository;
 
     @Override
     public List<OrderDTO> getAllOrders() {
@@ -33,8 +42,33 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDTO createOrder(OrderDTO orderDTO) {
-        return convertOrderToOrderDto(orderRepository.save(convertOrderDtoToOrder(orderDTO)));
+    public OrderDTO createOrder(OrderDTO orderDTO, List<ShoppingCartItemDTO> shoppingCartItems) {
+        orderDTO.setDateOfOrder(new Date());
+        Order order = orderRepository.save(convertOrderDtoToOrder(orderDTO));
+        createOrderItemsForOrder(order, shoppingCartItems);
+        deleteShoppingCartItemsForOrder(shoppingCartItems);
+        return convertOrderToOrderDto(order);
+    }
+
+    private void deleteShoppingCartItemsForOrder(List<ShoppingCartItemDTO> shoppingCartItemDTOs) {
+        List<ShoppingCartItem> shoppingCartItems = shoppingCartItemDTOs
+                .stream()
+                .map(this::convertShoppingCartItemDtoToShoppingCartItem)
+                .toList();
+
+        shoppingCartItemRepository.deleteAll(shoppingCartItems);
+    }
+
+    private void createOrderItemsForOrder(Order order, List<ShoppingCartItemDTO> shoppingCartItems) {
+        for (ShoppingCartItemDTO item : shoppingCartItems) {
+            orderItemRepository.save(new OrderItem(
+                    0,
+                    item.getQuantity(),
+                    item.getPrice(),
+                    item.getProduct(),
+                    order
+            ));
+        }
     }
 
     public Order convertOrderDtoToOrder(OrderDTO orderDTO) {
@@ -48,8 +82,8 @@ public class OrderServiceImpl implements OrderService {
                 orderDTO.getAddress(),
                 orderDTO.getCity(),
                 orderDTO.getCountry(),
-                orderDTO.getPaymentType(),
-                orderDTO.getUser(),
+                paymentTypeRepository.findById(orderDTO.getPaymentTypeId()).get(),
+                userRepository.findById(orderDTO.getUserId()).get(),
                 orderDTO.getOrderItems()
         );
     }
@@ -70,6 +104,15 @@ public class OrderServiceImpl implements OrderService {
                 order.getUser().getId(),
                 order.getUser(),
                 order.getOrderItems()
+        );
+    }
+
+    public ShoppingCartItem convertShoppingCartItemDtoToShoppingCartItem(ShoppingCartItemDTO shoppingCartItemDTO) {
+        return new ShoppingCartItem(
+                shoppingCartItemDTO.getId(),
+                productRepository.findById(shoppingCartItemDTO.getProductId()).get(),
+                (shoppingCartItemDTO.getUserId() != null ? userRepository.findById(shoppingCartItemDTO.getUserId()).get() : null),
+                shoppingCartItemDTO.getQuantity()
         );
     }
 
