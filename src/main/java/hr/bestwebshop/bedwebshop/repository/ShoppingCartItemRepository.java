@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface ShoppingCartItemRepository extends JpaRepository<ShoppingCartItem, Integer> {
     List<ShoppingCartItem> findShoppingCartItemsByUser(User user);
+    List<ShoppingCartItem> findShoppingCartItemByUuid(String uuid);
     List<ShoppingCartItem> findShoppingCartItemsByUserNull();
     Optional<ShoppingCartItem> findShoppingCartItemByProductAndUser(Product product, User user);
     void deleteAllByUser(User user);

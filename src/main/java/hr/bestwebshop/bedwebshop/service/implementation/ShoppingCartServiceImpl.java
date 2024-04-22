@@ -10,6 +10,7 @@ import hr.bestwebshop.bedwebshop.service.abstraction.ShoppingCartService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,26 +23,36 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private UserRepository userRepository;
 
     @Override
-    public List<ShoppingCartItemDTO> getAllShoppingCartItemsForUser(User user) {
+    public List<ShoppingCartItemDTO> getAllShoppingCartItemsForUser(User user, String uuid) {
+        List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findShoppingCartItemsByUser(user);
 
-        if(user != null) {
-            return shoppingCartItemRepository.findShoppingCartItemsByUser(user)
-                    .stream()
-                    .map(this::convertShoppingCartItemToShoppingCartItemDto)
-                    .toList();
+        if (uuid != null) {
+            shoppingCartItems.addAll(shoppingCartItemRepository.findShoppingCartItemByUuid(uuid));
         }
 
-        return shoppingCartItemRepository.findShoppingCartItemsByUserNull()
+        return shoppingCartItems
                 .stream()
                 .map(this::convertShoppingCartItemToShoppingCartItemDto)
                 .toList();
     }
 
     @Override
+    public List<ShoppingCartItemDTO> getAllShoppingCartItemsWithoutUser(String uuid) {
+        if (uuid != null) {
+            return shoppingCartItemRepository.findShoppingCartItemByUuid(uuid)
+                    .stream()
+                    .map(this::convertShoppingCartItemToShoppingCartItemDto)
+                    .toList();
+        }
+
+        return new ArrayList<>();
+    }
+
+    @Override
     public ShoppingCartItemDTO addShoppingCartItem(ShoppingCartItemDTO shoppingCartItemDTO) {
         ShoppingCartItem shoppingCartItemFromDto = convertShoppingCartItemDtoToShoppingCartItem(shoppingCartItemDTO);
         Optional<ShoppingCartItem> shoppingCartItemOptional = shoppingCartItemRepository.findShoppingCartItemByProductAndUser(shoppingCartItemFromDto.getProduct(), shoppingCartItemFromDto.getUser());
-        if(shoppingCartItemOptional.isEmpty()) {
+        if (shoppingCartItemOptional.isEmpty()) {
             return convertShoppingCartItemToShoppingCartItemDto(shoppingCartItemRepository.save(shoppingCartItemFromDto));
         }
 
@@ -68,11 +79,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public void deleteShoppingCartItemsForUser(User user) {
-        shoppingCartItemRepository.deleteAllByUser(user);
-    }
-
-    @Override
     public void incrementQuantityOfShoppingCartItem(Integer shoppingCartItemId) {
         ShoppingCartItem shoppingCartItem = shoppingCartItemRepository.findById(shoppingCartItemId).get();
         shoppingCartItem.setQuantity(shoppingCartItem.getQuantity() + 1);
@@ -82,7 +88,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void decrementQuantityOfShoppingCartItem(Integer shoppingCartItemId) {
         ShoppingCartItem shoppingCartItem = shoppingCartItemRepository.findById(shoppingCartItemId).get();
-        if(shoppingCartItem.getQuantity() == 1) {
+        if (shoppingCartItem.getQuantity() == 1) {
             shoppingCartItemRepository.delete(shoppingCartItem);
             return;
         }
@@ -96,7 +102,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 shoppingCartItemDTO.getId(),
                 productRepository.findById(shoppingCartItemDTO.getProductId()).get(),
                 (shoppingCartItemDTO.getUserId() != null ? userRepository.findById(shoppingCartItemDTO.getUserId()).get() : null),
-                shoppingCartItemDTO.getQuantity()
+                shoppingCartItemDTO.getQuantity(),
+                shoppingCartItemDTO.getUuid(),
+                shoppingCartItemDTO.getUuidExpiryTime()
         );
     }
 
@@ -108,7 +116,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 (shoppingCartItem.getUser() != null ? shoppingCartItem.getUser().getId() : null),
                 shoppingCartItem.getUser(),
                 shoppingCartItem.getQuantity(),
-                shoppingCartItem.getProduct().getPrice() * shoppingCartItem.getQuantity()
+                shoppingCartItem.getProduct().getPrice() * shoppingCartItem.getQuantity(),
+                shoppingCartItem.getUuid(),
+                shoppingCartItem.getUuidExpiryTime()
         );
     }
 }

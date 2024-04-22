@@ -112,7 +112,9 @@ public class OrderServiceImpl implements OrderService {
                 shoppingCartItemDTO.getId(),
                 productRepository.findById(shoppingCartItemDTO.getProductId()).get(),
                 (shoppingCartItemDTO.getUserId() != null ? userRepository.findById(shoppingCartItemDTO.getUserId()).get() : null),
-                shoppingCartItemDTO.getQuantity()
+                shoppingCartItemDTO.getQuantity(),
+                shoppingCartItemDTO.getUuid(),
+                shoppingCartItemDTO.getUuidExpiryTime()
         );
     }
 

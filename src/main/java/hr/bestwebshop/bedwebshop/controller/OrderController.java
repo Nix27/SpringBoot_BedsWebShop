@@ -35,9 +35,9 @@ public class OrderController {
     private PayPalService payPalService;
 
     @GetMapping("/orderSummary")
-    public String showOrderScreen(Model model) {
+    public String showOrderScreen(@CookieValue(name = "uuid", required = false) String uuid, Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<ShoppingCartItemDTO> shoppingCartItems = shoppingCartService.getAllShoppingCartItemsForUser(user);
+        List<ShoppingCartItemDTO> shoppingCartItems = shoppingCartService.getAllShoppingCartItemsForUser(user, uuid);
         model.addAttribute("user", user);
         model.addAttribute("shoppingCartItems", shoppingCartItems);
         model.addAttribute("paymentTypes", paymentTypeService.getAllPaymentTypes());

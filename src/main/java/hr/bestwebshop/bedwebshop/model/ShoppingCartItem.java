@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,4 +27,6 @@ public class ShoppingCartItem {
     private User user;
 
     private Integer quantity;
+    private String uuid;
+    private LocalDateTime uuidExpiryTime;
 }
