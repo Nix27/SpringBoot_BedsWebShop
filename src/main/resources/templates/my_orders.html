@@ -60,7 +60,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="order : ${orders}">
-                    <td th:text="${order.dateOfOrder}"></td>
+                    <td th:text="${#temporals.format(order.dateOfOrder, 'yyyy-MM-dd HH:mm:ss')}"></td>
                     <td th:text="${order.paymentType.name}"></td>
                     <td>
                        <div th:each="item : ${order.orderItems}">

@@ -8,8 +8,11 @@ import hr.bestwebshop.bedwebshop.service.abstraction.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -47,22 +50,17 @@ public class OrderServiceImpl implements OrderService {
                 .map(this::convertOrderToOrderDto)
                 .toList();
 
-        if(orderSearch != null) {
-            if(orderSearch.getUsername() != null && !orderSearch.getUsername().isEmpty()) {
+        if (orderSearch != null) {
+            if (orderSearch.getUsername() != null && !orderSearch.getUsername().isEmpty()) {
                 orders = orders.stream().filter(o -> o.getUser().getUsername().contains(orderSearch.getUsername())).toList();
             }
 
-            if(orderSearch.getFromDate() != null && orderSearch.getToDate() != null) {
-                try {
-                    Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(orderSearch.getFromDate());
-                    Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(orderSearch.getToDate());
+            if (orderSearch.getFromDate() != null && orderSearch.getToDate() != null && !orderSearch.getFromDate().isEmpty() && !orderSearch.getToDate().isEmpty()) {
+                LocalDateTime fromDate = LocalDateTime.parse(orderSearch.getFromDate(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                LocalDateTime toDate = LocalDateTime.parse(orderSearch.getToDate(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-                    if(fromDate.compareTo(toDate) < 0) {
-                        orders = orders.stream().filter(o -> o.getDateOfOrder().compareTo(fromDate) >= 0 && o.getDateOfOrder().compareTo(toDate) <= 0).toList();
-                    }
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                if (fromDate.isBefore(toDate) || fromDate.isEqual(toDate)) {
+                    orders = orders.stream().filter(o -> (o.getDateOfOrder().isAfter(fromDate) || o.getDateOfOrder().isEqual(fromDate)) && (o.getDateOfOrder().isEqual(toDate) || o.getDateOfOrder().isBefore(toDate))).toList();
                 }
             }
         }
@@ -72,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO createOrder(OrderDTO orderDTO, List<ShoppingCartItemDTO> shoppingCartItems) {
-        orderDTO.setDateOfOrder(new Date());
+        orderDTO.setDateOfOrder(LocalDateTime.now());
         Order order = orderRepository.save(convertOrderDtoToOrder(orderDTO));
         createOrderItemsForOrder(order, shoppingCartItems);
         deleteShoppingCartItemsForOrder(shoppingCartItems);

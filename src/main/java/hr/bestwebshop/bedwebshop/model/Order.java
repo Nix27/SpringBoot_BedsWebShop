@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Date dateOfOrder;
+    private LocalDateTime dateOfOrder;
     private Double totalPrice;
 
     private String firstname;
@@ -36,6 +37,6 @@ public class Order {
     @JoinColumn(name = "userId")
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order", cascade = CascadeType.DETACH)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = CascadeType.DETACH)
     private List<OrderItem> orderItems;
 }

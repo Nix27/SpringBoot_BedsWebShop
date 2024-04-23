@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 public class OrderDTO {
 
     private Integer id;
-    private Date dateOfOrder;
+    private LocalDateTime dateOfOrder;
     private Double totalPrice;
     private String firstname;
     private String lastname;

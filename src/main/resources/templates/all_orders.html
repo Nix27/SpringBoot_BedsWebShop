@@ -55,6 +55,14 @@
           <label for="name">Username:</label>
           <input type="text" id="name" th:field="*{username}" class="form-control rounded-2" />
         </div>
+        <div class="col-3">
+          <label for="fromDate">From date:</label>
+          <input type="datetime-local" id="fromDate" th:field="*{fromDate}" class="form-control rounded-2" />
+        </div>
+        <div class="col-3">
+          <label for="toDate">To date:</label>
+          <input type="datetime-local" id="toDate" th:field="*{toDate}" class="form-control rounded-2" />
+        </div>
         <div class="col-1">
           <input type="submit" value="Search" class="btn btn-primary" />
         </div>
@@ -72,7 +80,7 @@
         </thead>
         <tbody>
         <tr th:each="order : ${orders}">
-          <td th:text="${order.dateOfOrder}"></td>
+          <td th:text="${#temporals.format(order.dateOfOrder, 'yyyy-MM-dd HH:mm:ss')}"></td>
           <td th:text="${order.paymentType.name}"></td>
           <td th:text="${order.user.username}"></td>
           <td>
