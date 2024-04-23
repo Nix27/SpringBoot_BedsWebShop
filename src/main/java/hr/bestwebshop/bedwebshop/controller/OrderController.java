@@ -6,6 +6,7 @@ import com.paypal.base.rest.PayPalRESTException;
 import hr.bestwebshop.bedwebshop.dto.OrderDTO;
 import hr.bestwebshop.bedwebshop.dto.ShoppingCartItemDTO;
 import hr.bestwebshop.bedwebshop.enums.PaymentTypeEnum;
+import hr.bestwebshop.bedwebshop.model.OrderSearch;
 import hr.bestwebshop.bedwebshop.model.User;
 import hr.bestwebshop.bedwebshop.service.abstraction.OrderService;
 import hr.bestwebshop.bedwebshop.service.abstraction.PayPalService;
@@ -26,7 +27,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 @RequestMapping("/bedswebshop/order")
-@SessionAttributes({"order", "shoppingCartItems"})
+@SessionAttributes({"order", "shoppingCartItems", "orders", "orderSearch"})
 public class OrderController {
 
     private OrderService orderService;
@@ -109,6 +110,25 @@ public class OrderController {
     @GetMapping("/canceled")
     public String orderCanceled() {
         return "order_canceled";
+    }
+
+    @GetMapping("/allOrders")
+    public String getAllOrders(Model model) {
+        if(!model.containsAttribute("orders")) {
+            model.addAttribute("orders", orderService.getAllOrders());
+        }
+
+        if(!model.containsAttribute("orderSearch")) {
+            model.addAttribute("orderSearch", new OrderSearch());
+        }
+
+        return "all_orders";
+    }
+
+    @GetMapping("/filterOrders")
+    public String filterOrders(@ModelAttribute OrderSearch orderSearch, Model model) {
+        model.addAttribute("orders", orderService.getFilteredOrders(orderSearch));
+        return "redirect:allOrders";
     }
 
 }

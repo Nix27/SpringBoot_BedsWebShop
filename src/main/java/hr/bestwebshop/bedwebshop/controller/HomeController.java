@@ -5,6 +5,7 @@ import hr.bestwebshop.bedwebshop.dto.ShoppingCartItemDTO;
 import hr.bestwebshop.bedwebshop.model.ProductSearch;
 import hr.bestwebshop.bedwebshop.model.User;
 import hr.bestwebshop.bedwebshop.service.abstraction.CategoryService;
+import hr.bestwebshop.bedwebshop.service.abstraction.OrderService;
 import hr.bestwebshop.bedwebshop.service.abstraction.ProductService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +29,7 @@ public class HomeController {
 
     private ProductService productService;
     private CategoryService categoryService;
+    private OrderService orderService;
 
     @GetMapping("/home")
     public String showHomePage(Model model) {
@@ -69,6 +71,13 @@ public class HomeController {
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 
         return new ResponseEntity<>(image, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/myOrders")
+    public String getMyOrders(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("orders", orderService.getOrdersForUser(user));
+        return "my_orders";
     }
 
 }

@@ -33,11 +33,14 @@ public class SecurityConfiguration {
                                 "/bedswebshop/shoppingcart/**"
                                 ).permitAll()
                         .requestMatchers(
-                                "/bedswebshop/order/**"
+                                "/bedswebshop/order/**",
+                                "/bedswebshop/myOrders"
                         ).hasAnyRole("USER", "ADMIN")
                         .requestMatchers(
                                 "/bedswebshop/categories/**",
-                                "/bedswebshop/products/**").hasRole("ADMIN")
+                                "/bedswebshop/products/**",
+                                "/bedswebshop/order/allOrders",
+                                "/bedswebshop/order/filterOrders").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.defaultSuccessUrl("/bedswebshop/home"))

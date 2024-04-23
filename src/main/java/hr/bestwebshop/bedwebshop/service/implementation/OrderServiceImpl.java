@@ -2,15 +2,14 @@ package hr.bestwebshop.bedwebshop.service.implementation;
 
 import hr.bestwebshop.bedwebshop.dto.OrderDTO;
 import hr.bestwebshop.bedwebshop.dto.ShoppingCartItemDTO;
-import hr.bestwebshop.bedwebshop.model.Order;
-import hr.bestwebshop.bedwebshop.model.OrderItem;
-import hr.bestwebshop.bedwebshop.model.ShoppingCartItem;
-import hr.bestwebshop.bedwebshop.model.User;
+import hr.bestwebshop.bedwebshop.model.*;
 import hr.bestwebshop.bedwebshop.repository.*;
 import hr.bestwebshop.bedwebshop.service.abstraction.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +38,36 @@ public class OrderServiceImpl implements OrderService {
                 .stream()
                 .map(this::convertOrderToOrderDto)
                 .toList();
+    }
+
+    @Override
+    public List<OrderDTO> getFilteredOrders(OrderSearch orderSearch) {
+        List<OrderDTO> orders = orderRepository.findAll()
+                .stream()
+                .map(this::convertOrderToOrderDto)
+                .toList();
+
+        if(orderSearch != null) {
+            if(orderSearch.getUsername() != null && !orderSearch.getUsername().isEmpty()) {
+                orders = orders.stream().filter(o -> o.getUser().getUsername().contains(orderSearch.getUsername())).toList();
+            }
+
+            if(orderSearch.getFromDate() != null && orderSearch.getToDate() != null) {
+                try {
+                    Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(orderSearch.getFromDate());
+                    Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(orderSearch.getToDate());
+
+                    if(fromDate.compareTo(toDate) < 0) {
+                        orders = orders.stream().filter(o -> o.getDateOfOrder().compareTo(fromDate) >= 0 && o.getDateOfOrder().compareTo(toDate) <= 0).toList();
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return orders;
     }
 
     @Override
