@@ -20,7 +20,7 @@
                     <a class="nav-link" th:href="@{/bedswebshop/home}">Home</a>
                 </li>
                 <li th:if="!${#authentication.getName().equals('anonymousUser')}" class="nav-item active">
-                    <a class="nav-link" href="#">My Orders</a>
+                    <a class="nav-link" th:href="@{/bedswebshop/myOrders}">My Orders</a>
                 </li>
                 <li th:if="${#authentication.getName().equals('admin')}" class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -29,7 +29,8 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="/bedswebshop/categories/getAllCategories">Categories</a>
                         <a class="dropdown-item" href="/bedswebshop/products/getAllProducts">Products</a>
-                        <a class="dropdown-item" href="#">Orders</a>
+                        <a class="dropdown-item" th:href="@{/bedswebshop/order/allOrders}">Orders</a>
+                        <a class="dropdown-item" th:href="@{/bedswebshop/userlogins/allUserLogins}">User logins</a>
                     </div>
                 </li>
             </ul>
