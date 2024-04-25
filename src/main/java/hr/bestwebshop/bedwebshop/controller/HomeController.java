@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,10 +49,19 @@ public class HomeController {
         return "home";
     }
 
-    @PostMapping("/filterProducts")
+    @GetMapping("/filterProducts")
     public String filterProducts(@ModelAttribute ProductSearch productSearch, Model model) {
         List<ProductDTO> products = productService.filterProducts(productSearch);
         model.addAttribute("products", products);
+        return "redirect:home";
+    }
+
+    @GetMapping("/clearFilter")
+    public String clearFilter(Model model) {
+        List<ProductDTO> products = productService.getAllProducts();
+        model.addAttribute("products", products);
+        model.addAttribute("productSearch", new ProductSearch());
+        model.addAttribute("categories", categoryService.getAllCategories());
         return "redirect:home";
     }
 

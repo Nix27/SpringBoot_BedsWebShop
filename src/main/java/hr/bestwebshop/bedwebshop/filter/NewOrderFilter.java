@@ -3,6 +3,7 @@ package hr.bestwebshop.bedwebshop.filter;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.type.descriptor.java.ZoneOffsetJavaType;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
@@ -33,7 +34,7 @@ public class NewOrderFilter implements Filter {
             Instant endTime = Instant.now();
             Duration duration = Duration.between(startTime, endTime);
 
-            String orderCreationInfo = "Request started at: " + LocalDateTime.ofInstant(endTime, ZoneOffset.UTC)
+            String orderCreationInfo = "Request started at: " + LocalDateTime.ofInstant(endTime, ZoneOffset.systemDefault())
                     .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")) + "\n"
                     + "Request duration: " + duration.toMillis() + " milliseconds\n";
 

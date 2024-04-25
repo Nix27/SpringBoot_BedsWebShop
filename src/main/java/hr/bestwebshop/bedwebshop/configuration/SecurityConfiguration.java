@@ -33,7 +33,8 @@ public class SecurityConfiguration {
                                 "/bedswebshop/filterProducts",
                                 "/bedswebshop/productDetails/**",
                                 "/bedswebshop/image/**",
-                                "/bedswebshop/shoppingcart/**"
+                                "/bedswebshop/shoppingcart/**",
+                                "/bedswebshop/clearFilter"
                                 ).permitAll()
                         .requestMatchers(
                                 "/bedswebshop/order/**",

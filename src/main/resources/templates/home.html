@@ -50,17 +50,17 @@
     </nav>
      <div class="mx-5 mt-4">
          <div class="container mb-4">
-             <form action="#" th:action="@{/bedswebshop/filterProducts}" th:object="${productSearch}" method="post">
+             <form action="#" th:action="@{/bedswebshop/filterProducts}" th:object="${productSearch}" method="get">
                  <div class="row">
-                     <div class="col-3">
+                     <div class="col-2">
                         <label for="name">Name:</label>
                          <input type="text" id="name" th:field="*{name}" class="form-control rounded-2" />
                      </div>
-                     <div class="col-3">
+                     <div class="col-2">
                          <label for="fromPrice">From price:</label>
                          <input type="number" id="fromPrice" th:field="*{priceFrom}" class="form-control rounded-2" />
                      </div>
-                     <div class="col-3">
+                     <div class="col-2">
                          <label for="fromTo">To price:</label>
                          <input type="number" id="fromTo" th:field="*{priceTo}" class="form-control rounded-2" />
                      </div>
@@ -71,8 +71,9 @@
                              <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
                          </select>
                      </div>
-                     <div class="col-1">
+                     <div class="col-3">
                          <input type="submit" value="Search" class="btn btn-primary" />
+                         <a th:href="@{/bedswebshop/clearFilter}" class="btn btn-secondary">Clear filter</a>
                      </div>
                  </div>
              </form>
