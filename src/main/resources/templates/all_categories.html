@@ -51,8 +51,8 @@
     <div class="mx-5 mt-4">
         <h2>All Categories</h2>
         <a th:href="@{/bedswebshop/categories/addNewCategory}" class="btn btn-primary my-2">Add New Category</a>
-        <div th:if="${not #lists.isEmpty(categories)}">
-            <table class="table">
+
+            <table class="table" id="category-table">
                 <thead class="thead-dark">
                 <tr>
                     <th scope="col">Id</th>
@@ -60,15 +60,39 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="category : ${categories}">
-                    <th th:text="${category.id}" scope="row"></th>
-                    <td th:text="${category.name}"></td>
-                    <td><a th:href="@{/bedswebshop/categories/updateCategory/{categoryId}(categoryId=${category.id})}" class="btn btn-secondary">Edit</a></td>
-                    <td><a th:href="@{/bedswebshop/categories/deleteCategory/{categoryId}(categoryId=${category.id})}" class="btn btn-danger">Delete</a></td>
-                </tr>
                 </tbody>
             </table>
-        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                fetch('/bedswebshop/ajaxCategories/getAllCategories')
+                    .then(response => response.json())
+                    .then(data => {
+                        const table = document.getElementById('category-table').getElementsByTagName('tbody')[0];
+                        data.forEach(category => {
+                            let row = table.insertRow();
+                            let id = row.insertCell(0);
+                            let name = row.insertCell(1);
+                            let edit = row.insertCell(2);
+                            let deleteButton = row.insertCell(3);
+                            id.innerHTML = category.id;
+                            name.innerHTML = category.name;
+
+                            let editLink = document.createElement('a');
+                            editLink.href = `/bedswebshop/categories/updateCategory/${category.id}`;
+                            editLink.className = 'btn btn-secondary';
+                            editLink.textContent = 'Edit';
+                            edit.appendChild(editLink);
+
+                            let deleteLink = document.createElement('a');
+                            deleteLink.href = `/bedswebshop/categories/deleteCategory/${category.id}`;
+                            deleteLink.className = 'btn btn-danger';
+                            deleteLink.textContent = 'Delete';
+                            deleteButton.appendChild(deleteLink);
+                        });
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        </script>
     </div>
 </body>
 </html>
